@@ -1,0 +1,9 @@
+.card-fitur img {
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+/* button */
+.card-fitur .tombol {
+    border-radius: 40px;
+}
