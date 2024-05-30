@@ -1,6 +1,6 @@
 @extends('user.layout.header')
 
-  @section('content')
+@section('content')
     <!-- Jumbotron -->
     <div class="jumbotron jumbotron-fluid">
       <div class="container">

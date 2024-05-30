@@ -46,32 +46,33 @@
             <h2>Kamar</h2>
           </div>
         </div>
-        @foreach ($typekamar as $datatypekamar)
         <div class="row d-flex justify-center">
+          @foreach ($typekamar as $datatypekamar)
           <div class="col-md-4">
             <div class="card-fitur mt-3 position-relative">
               <img src="{{ url('img/'.$datatypekamar->gmbr_typekamar) }}" alt="" class="w-100">
               <div class="overlay position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100">
                 <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
                   <h5>{{ $datatypekamar->nm_typekamar }}</h5>
-                  <button class="btn btn-outline-light tombol" data-bs-toggle="modal" data-bs-target="#modaldetail">Selengkapnya</button>
+                  <button class="btn btn-outline-light tombol" data-bs-toggle="modal" data-bs-target="#modaldetail{{ $datatypekamar->id_typekamar }}">Lihat Fasilitas</button>
                   {{-- <button class="btn btn-outline-light tombol" data-bs-toggle="modal" data-bs-target="#modaldetail{{ $datatypekamar->id_typekamar }}">Selengkapnya</button> --}}
                 </div>
               </div>
             </div>
           </div>
+          @endforeach
         </div>
-        @endforeach
       </div>
     </section>
     <!-- end type kamar -->
 
     <!-- modal detail type kamar -->
-    <div class="modal fade" id="modaldetail" aria-hidden="true" aria-labelledby="modaldetailLabel" tabindex="-1">
+    @foreach ($typekamar as $datatypekamar)
+    <div class="modal fade" id="modaldetail{{ $datatypekamar->id_typekamar }}" aria-hidden="true" aria-labelledby="modaldetailLabel" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modaldetailLabel">Detail Kamar Standard Room</h5>
+            <h5 class="modal-title" id="modaldetailLabel">Detail Kamar {{ $datatypekamar->nm_typekamar }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -79,68 +80,24 @@
               <div class="col-md-12 m-3">
                 <div class="row">
                   <div class="col-6">
-                    <img src="../../img/Standard Room.png" class="w-100">
+                    <img src="{{ url('img/'.$datatypekamar->gmbr_typekamar) }}" class="w-100">
                   </div>
                   <div class="col-6">
                     <div class="row">
                       <div class="col-6">
-                        <h5>Standard Room</h5>
+                        <h5>{{ $datatypekamar->nm_typekamar }}</h5>
                       </div>
                       <div class="col-6">
-                        <p style="font-size: 80%; margin-right:15%; margin-top: 1.5%; text-align:end">Rp. 130.000/malam</p>
+                        <p style="font-size: 80%; margin-right:15%; margin-top: 1.5%; text-align:end">Rp {{ number_format($datatypekamar->harga, 0, ',', '.') }}/malam</p>
                       </div>
                     </div>
                     <hr style="margin-top:-1%; margin-left:-1%; margin-right:6%">
                     <div class="row justify-content-center">
                       <div class="col-11" style="margin-right: 6%">
                         <h6> Fasilitas : </h6>
+                        @foreach ($datatypekamar->fasilitas_kamar as $fasilitas)
                         <p>
-                          2 Tempat Tidur, 1 Televisi, 1 Ac, Kamar Mandi Dalam, 2 Handuk
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{-- @foreach ($faskam as $detailtypekamar)
-    <div class="modal fade" id="modaldetail{{ $detailtypekamar->id_typekamar }}" aria-hidden="true" aria-labelledby="modaldetailLabel" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modaldetailLabel">Detail Kamar {{ $detailtypekamar->typekamar->nm_typekamar }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12 m-3">
-                <div class="row">
-                  <div class="col-6">
-                    <img src="{{ url('img/'.$detailtypekamar->gmbr_typekamar) }}" class="w-100">
-                  </div>
-                  <div class="col-6">
-                    <div class="row">
-                      <div class="col-6">
-                        <h5>{{ $detailtypekamar->nm_typekamar }}</h5>
-                      </div>
-                      <div class="col-6">
-                        <p style="font-size: 80%; margin-right:15%; margin-top: 1.5%; text-align:end">Rp. {{ number_format($detailtypekamar->harga, 0, ',', '.') }}/malam</p>
-                      </div>
-                    </div>
-                    <hr style="margin-top:-1%; margin-left:-1%; margin-right:6%">
-                    <div class="row justify-content-center">
-                      <div class="col-11" style="margin-right: 6%">
-                        <h6> Fasilitas : </h6>
-                        @foreach ($faskam as $datafaskam)
-                        <p>
-                           {{ $datatypekamar->jumlah_faskam }} {{ $datatypekamar->nm_faskam }},
+                           {{ $fasilitas->jumlah_faskam }} {{ $fasilitas->nm_faskam }}
                         </p>
                         @endforeach
                       </div>
@@ -156,11 +113,10 @@
         </div>
       </div>
     </div>
-    @endforeach --}}
-    <!-- end modal detail type kamar -->
+    @endforeach
 
     <!-- ketersediaan kamar -->
-    <section id="ketersediaan-kamar">
+    <!-- <section id="ketersediaan-kamar">
       <div class="container mt-5">
         <div class="row">
           <div class="judul-ketkam text-end">
@@ -173,24 +129,26 @@
               <thead>
                 <tr>
                   <th scope="col">No</th>
+                  @foreach ($typekamar as $datatypekamar)
+                    <th scope="col">{{ $datatypekamar->nm_typekamar }}</th>
+                    @endforeach
                   <th scope="col">Tanggal</th>
-                  <th scope="col">Standard Room</th>
-                  <th scope="col">Superior Twin Room</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">1</th>
-                  <td>12 Oktober 2023</td>
-                  <td>Tersedia 1 kamar</td>
-                  <td>Tersedia 2 kamar</td>
+                  <td>1 Kamar</td>
+                  <td>2 Kamar</td>
+                  <td>1 Kamar</td>
+                  <td>30 Mei 2024</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-    </section>
+    </section>  -->
     {{-- <section id="ketersediaan-kamar">
       <div class="container mt-5">
         <div class="row">

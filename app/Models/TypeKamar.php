@@ -22,7 +22,7 @@ class TypeKamar extends Model
 
     public function fasilitas_kamar()
     {
-        return $this->hasMany(FasilitasKamar::class);
+        return $this->hasMany(FasilitasKamar::class, 'id_typekamar');
     }
 
     public function reservasi()
