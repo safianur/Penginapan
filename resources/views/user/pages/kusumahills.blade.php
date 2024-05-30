@@ -27,6 +27,7 @@
     <!-- end judul Event -->
 
     <!-- type kamar -->
+    @foreach($typekamar as $type)
     <section id="type-kamar">
       <div class="container mt-5">
         <div class="row">
@@ -37,11 +38,11 @@
         <div class="row d-flex justify-center">
           <div class="col-md-4">
             <div class="card-fitur mt-3 position-relative">
-              <img src="{{ url('img/'.$typekamar->gmbr_typekamar) }}" alt="" class="w-100">
+              <img src="{{ url('img/'.$type->gmbr_typekamar) }}" alt="" class="w-100">
               <div class="overlay position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100">
                 <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
-                  <h5>{{ $typekamar->nm_typekamar }}</h5>
-                  <button class="btn btn-outline-light tombol" data-bs-toggle="modal" data-bs-target="#modaldetail{{ $typekamar->id_typekamar }}">Selengkapnya</button>
+                  <h5>{{ $type->nm_typekamar }}</h5>
+                  <button class="btn btn-outline-light tombol" data-bs-toggle="modal" data-bs-target="#modaldetail{{ $type->id_typekamar }}">Lihat Fasilitas</button>
                 </div>
               </div>
             </div>
@@ -49,39 +50,41 @@
         </div>
       </div>
     </section>
+    @endforeach
     <!-- end type kamar -->
 
-    <!-- modal detail type kamar -->
-    <div class="modal fade" id="modaldetail{{ $typekamar->id_typekamar }}" aria-hidden="true" aria-labelledby="modaldetailLabel" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modaldetailLabel">Detail Kamar {{ $typekamar->nm_typekamar }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
+      <!-- modal detail type kamar -->
+      @foreach($typekamar as $type)
+      <div class="modal fade" id="modaldetail{{ $type->id_typekamar }}" aria-hidden="true" aria-labelledby="modaldetailLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modaldetailLabel">Detail Kamar {{ $type->nm_typekamar }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
             <div class="row">
               <div class="col-md-12 m-3">
                 <div class="row">
                   <div class="col-6">
-                    <img src="{{ url('img/'.$typekamar->gmbr_typekamar) }}" class="w-100">
+                    <img src="{{ url('img/'.$type->gmbr_typekamar) }}" class="w-100">
                   </div>
                   <div class="col-6">
                     <div class="row">
                       <div class="col-6">
-                        <h5>{{ $typekamar->nm_typekamar }}</h5>
+                        <h5>{{ $type->nm_typekamar }}</h5>
                       </div>
                       <div class="col-6">
-                        <p style="font-size: 80%; margin-right:15%; margin-top: 1.5%; text-align:end">Rp. {{ number_format($typekamar->harga, 0, ',', '.') }}/malam</p>
+                        <p style="font-size: 80%; margin-right:15%; margin-top: 1.5%; text-align:end">Rp. {{ number_format($type->harga, 0, ',', '.') }}/malam</p>
                       </div>
                     </div>
                     <hr style="margin-top:-1%; margin-left:-1%; margin-right:6%">
                     <div class="row justify-content-center">
                       <div class="col-11" style="margin-right: 6%">
                         <h6> Fasilitas : </h6>
-                        @foreach ($faskam as $datafaskam)
+                        @foreach ($type->fasilitas_kamar as $fasilitas)
                         <p>
-                           {{ $datafaskam->jumlah_faskam }} {{ $datafaskam->nm_faskam }},
+                           {{ $fasilitas->jumlah_faskam }} {{ $fasilitas->nm_faskam }}
                         </p>
                         @endforeach
                       </div>
@@ -97,6 +100,7 @@
         </div>
       </div>
     </div>
+    @endforeach
     <!-- end modal detail type kamar -->
 
     <!-- ketersediaan kamar -->
@@ -284,7 +288,7 @@
         <div class="row justify-content-center">
           <div class="col-5 d-flex justify-content-center" style="background-color: #EFE4BB">
             <div class="albis">
-              <p>Alamat : {{ $alamat->alamat }}</p>
+              <!-- <p>Alamat : {{ $alamat->alamat }}</p> -->
               <p>Contact Person : <br> +62 813-3340-8524 (Bahron) <br> +62 882-0000-32209 (Maura)</p>
             </div>
           </div>

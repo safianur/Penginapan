@@ -13,13 +13,24 @@ use Illuminate\Support\Str;
 
 class ReservasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bisnis = Bisnis::all();
+        $search = $request->input('search');
         $id_user = Auth::id();
         $user = User::findOrFail($id_user);
-        $reservasi = Reservasi::where('id_bisnis', $user->id_bisnis)->latest()->get();
-        return view('admin.pages.list.list', compact('bisnis', 'reservasi'));
+    
+        $reservasiQuery = Reservasi::where('id_bisnis', $user->id_bisnis);
+    
+        if ($search) {
+            $reservasiQuery->whereHas('pengunjung', function ($query) use ($search) {
+                $query->where('nm_pengunjung', 'like', "%{$search}%");
+            });
+        }
+        
+        $reservasi = $reservasiQuery->latest()->paginate(5);
+        $bisnis = Bisnis::all();
+        
+        return view('admin.pages.list.list', compact('bisnis', 'reservasi', 'search'));
     }
 
     public function gettypekamar(Request $request)

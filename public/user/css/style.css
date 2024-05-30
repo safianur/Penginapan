@@ -26,8 +26,8 @@
 }
 
 h2 {
-    background-color: #6a591f;
-    color: white !important;
+    /* background-color: #6a591f; */
+    /* color: white !important; */
     font-size: 25px;
     display: inline-flex;
     padding: 2px 40px 8px 40px;
@@ -355,6 +355,7 @@ h2 {
 
 /* DESKTOP VERSION */
 @media (min-width: 576px) {
+
     /* jumbotron */
     .jumbotron {
         background-image: url(../../img/document/gerbang.jpeg);

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
-
 use App\Models\Bisnis;
 use App\Models\DataPengunjung;
 use App\Models\FasilitasKamar;
@@ -18,6 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BisnisUserController extends Controller
 {
@@ -73,6 +72,27 @@ class BisnisUserController extends Controller
             'email'         => $request->email,
             'kontak'        => $request->nohp,
         ]);
+
+        $existingReservations = Reservasi::where('id_bisnis', $request->id_bisnis)
+        ->where('id_typekamar', $request->id_typekamar)
+        ->where(function($query) use ($request) {
+            $query->whereBetween('checkin', [$request->checkin, $request->checkout])
+                ->orWhereBetween('checkout', [$request->checkin, $request->checkout])
+                ->orWhere(function($query) use ($request) {
+                    $query->where('checkin', '<', $request->checkin)
+                        ->where('checkout', '>', $request->checkout);
+                });
+        })->count();
+
+        $typeKamar = TypeKamar::find($request->id_typekamar);
+        // dd($typeKamar);
+
+        // Periksa apakah kamar tersedia
+        if ($existingReservations >= $typeKamar->stok_kamar) {
+            $namaKamar = $typeKamar->nm_typekamar;
+            Alert::error('Kamar Tidak Tersedia', "Kamar {$namaKamar} sudah habis dipesan untuk tanggal tersebut.");
+            return redirect()->back();
+        }
 
         $id_pengunjung = $datapengunjung->id_pengunjung;
         $ambildata = Reservasi::create([
@@ -167,10 +187,11 @@ class BisnisUserController extends Controller
     {
         $bisnis = Bisnis::all();
         $alamat = Bisnis::where('id_bisnis', 1)->first();
-        $typekamar = TypeKamar::where('id_bisnis', 1)->get();
+        $typekamar = TypeKamar::where('id_bisnis', 1)->with('fasilitas_kamar')->get();
         $faspub = FasilitasPublic::where('id_bisnis', 1)->get();
         $wisata = Wisata::where('id_bisnis', 1)->get();
         $gallery = Gallery::where('id_bisnis', 1)->get();
+
         return view('user.pages.villapakis', compact('bisnis', 'alamat', 'typekamar', 'faspub', 'wisata', 'gallery'));
     }
 
@@ -178,8 +199,8 @@ class BisnisUserController extends Controller
     {
         $bisnis = Bisnis::all();
         $alamat = Bisnis::where('id_bisnis', 2)->first();
-        $typekamar = TypeKamar::where('id_bisnis', 2)->get();
-        $faskam = FasilitasKamar::with('typekamar')->where('id_typekamar', $typekamar->id_typekamar)->get();
+        $typekamar = TypeKamar::where('id_bisnis', 2)->with('fasilitas_kamar')->get();
+        $faskam = FasilitasKamar::with('typekamar')->where('id_typekamar', 3)->get();
         $faspub = FasilitasPublic::where('id_bisnis', 2)->get();
         $wisata = Wisata::where('id_bisnis', 2)->get();
         $gallery = Gallery::where('id_bisnis', 2)->get();

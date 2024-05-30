@@ -27,6 +27,14 @@
                       </button>
                     </div>
                   </div>
+                  <form action="/list" method="GET">
+                      <div class="input-group mb-3 w-50">
+                          <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                          <div class="input-group-append">
+                              <button class="btn btn-primary" type="submit">Search</button>
+                          </div>
+                      </div>
+                  </form>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -41,10 +49,10 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <?php $no=1; ?>
+                        <?php $no = $reservasi->firstItem(); ?>
                         @foreach ($reservasi as $datareservasi)
                         <tr>
-                          <td>{{ $no++ }}</td>
+                          <td>{{ $no++}}</td>
                           <td>{{ $datareservasi->pengunjung->email }}</td>
                           <td>{{ $datareservasi->pengunjung->nm_pengunjung }}</td>
                           <td>{{ $datareservasi->pengunjung->kontak }}</td>
@@ -67,6 +75,9 @@
                         @endforeach
                       </tbody>
                     </table>
+                  </div>
+                  <div class="mt-5 d-flex justify-content-end">
+                    {{ $reservasi->appends(['search' => request('search')])->links('vendor.pagination.bootstrap-4') }}
                   </div>
                 </div>
               </div>
